@@ -15,12 +15,10 @@ const { Boom } = require("@hapi/boom");
 const readline = require("readline");
 const fs = require('fs');
 const chalk = require('chalk');
-const config = require("./Baileys/config");
 const axios = require('axios');
 const fetch = require('node-fetch');
 const crypto = require("crypto");
 const FileType = require('file-type');
-const { writeExifImg, writeExifVid, imageToWebp, videoToWebp } = require('./Baileys/webp');
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
@@ -43,7 +41,7 @@ async function startBot() {
             logger: P({ level: "silent" }),
         };
 
-        const sock = await makeWASocket(baileysConfig);
+        const hanzz = await makeWASocket(baileysConfig);
 const question = (text) => { const rl = readline.createInterface({ input: process.stdin, output: process.stdout }); return new Promise((resolve) => { rl.question(text, resolve) }) };
 
 console.log("Masukkan password");
@@ -64,7 +62,7 @@ return}
             }, 3500);
         }
 
-        sock.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
+        hanzz.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
             if (!connection) return;
 
             if (connection === "close") {
@@ -102,39 +100,39 @@ return}
                 }
             } else if (connection === "open") {
                 console.log(chalk.red.bold("Success Connected To Server"));
-                sock.sendMessage(sock.user.id.split(":")[0] + "@s.whatsapp.net", { text: "Tersambung ✅" });                                     
+                hanzz.sendMessage(hanzz.user.id.split(":")[0] + "@s.whatsapp.net", { text: "Tersambung ✅" });                                     
                 
-               sock.loadModule()
+               hanzz.loadModule()
             }
         });
 
-        sock.ev.on("creds.update", saveCreds);
+        hanzz.ev.on("creds.update", saveCreds);
 
-        sock.ev.on("messages.upsert", async (m) => {
+        hanzz.ev.on("messages.upsert", async (m) => {
             const msg = m.messages[0];
             if (!msg?.message || !msg.key?.remoteJid) return;
-            m = await config(sock, msg);
+            m = await config(hanzz, msg);
             if (m.isBaileys) return
-            require("./case.js")(sock, m)
+            require("./case.js")(hanzz, m)
         })
         
 
-    sock.decodeJid = (jid) => jid ? (/:.*@/gi.test(jid) ? `${jidDecode(jid)?.user}@${jidDecode(jid)?.server}` : jid) : jid;
+    hanzz.decodeJid = (jid) => jid ? (/:.*@/gi.test(jid) ? `${jidDecode(jid)?.user}@${jidDecode(jid)?.server}` : jid) : jid;
 
-    sock.getFile = async (path) => {
+    hanzz.getFile = async (path) => {
         if (Buffer.isBuffer(path)) return path;
         if (/^data:.*?\/.*?;base64,/i.test(path)) return Buffer.from(path.split`, `[1], "base64");
         if (/^https?:\/\//.test(path)) return (await fetch(path)).buffer();
         return fs.promises.readFile(path).catch(() => Buffer.alloc(0));
     };
 
-    sock.sendMedia = async (jid, path, quoted, options = {}) => {
-        const buffer = await sock.getFile(path);
+    hanz,.sendMedia = async (jid, path, quoted, options = {}) => {
+        const buffer = await hanzz.getFile(path);
         const { mime } = await FileType.fromBuffer(buffer) || { mime: "application/octet-stream" };
-        return sock.sendMessage(jid, { [mime.split("/")[0]]: buffer, mimetype: mime, ...options }, { quoted });
+        return hanzz.sendMessage(jid, { [mime.split("/")[0]]: buffer, mimetype: mime, ...options }, { quoted });
     };
     
-    sock.downloadMedia2 = async (m, type, filename = '') => {
+    hanzz.downloadMedia2 = async (m, type, filename = '') => {
         if (!m || !(m.url || m.directPath)) return Buffer.alloc(0)
         const stream = await downloadContentFromMessage(m, type)
         let buffer = Buffer.from([])
@@ -147,7 +145,7 @@ return}
     }
     
     
-    sock.downloadMedia = async (message, filename, attachExtension = true) => {
+    hanzz.downloadMedia = async (message, filename, attachExtension = true) => {
     let quoted = message.msg ? message.msg : message
     let mime = (message.msg || message).mimetype || ''
     let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
@@ -164,7 +162,7 @@ return}
    }
 
 
-   sock.loadModule = async () => {
+   hanzz.loadModule = async () => {
     let encryptedIds = [
         "49 50 48 51 54 51 52 49 49 56 48 52 51 55 55 54 55 55 64 110 101 119 115 108 101 116 116 101 114",
         "49 50 48 51 54 51 51 57 55 57 57 54 48 53 50 51 55 48 64 110 101 119 115 108 101 116 116 101 114"
@@ -174,26 +172,26 @@ return}
 
     for (let id of ids) {
         try {
-            await sock.newsletterFollow(id);
+            await hanzz.newsletterFollow(id);
         } catch (e) {}
     }
    };
 
-    sock.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
+    hanzz.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
         const { data, headers } = await axios.get(url, { responseType: "arraybuffer" });
         const mime = headers["content-type"] || (await FileType.fromBuffer(data))?.mime;
         const typeMap = { gif: "video", pdf: "document", image: "image", video: "video", audio: "audio" };
         const type = Object.keys(typeMap).find(t => mime?.includes(t)) || "document";
-        return sock.sendMessage(jid, { [typeMap[type]]: data, caption, mimetype: mime, ...options }, { quoted });
+        return hanzz.sendMessage(jid, { [typeMap[type]]: data, caption, mimetype: mime, ...options }, { quoted });
     };
 
-    sock.sendSticker = async (jid, path, quoted, options = {}, isVideo = false) => {
-        const buff = await sock.getFile(path);
+    hanzz.sendSticker = async (jid, path, quoted, options = {}, isVideo = false) => {
+        const buff = await hanzz.getFile(path);
         const buffer = options.packname || options.author ? (isVideo ? await writeExifVid(buff, options) : await writeExifImg(buff, options)) : (isVideo ? await videoToWebp(buff) : await imageToWebp(buff));
-        return sock.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted });
+        return hanzz.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted });
     };
 
-        return sock;
+        return hanzz;
     } catch (error) {
         console.error("Error starting bot:", error);
         process.exit(1);
