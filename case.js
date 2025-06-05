@@ -768,33 +768,9 @@ Haii Saya Adalah *AteusCrasher Via WhatsApp* Yang Di Rakit Oleh ${owner} Saya Di
  • crashios 628xxx
   `;
 
-  const videoPath = './media/hanzzdevv.mp4';
-  const audioPath = './media/audio.mp3'; 
-
-  if (!fs.existsSync(videoPath)) {
-    return hanzz.sendMessage(m.key.remoteJid, { text: '❌ File video menu.mp4 tidak ditemukan' });
-  }
-
-  if (!fs.existsSync(audioPath)) {
-    return hanzz.sendMessage(m.key.remoteJid, { text: '❌ File audio menu.mp3 tidak ditemukan' });
-  }
-
-  const videoBuffer = fs.readFileSync(videoPath);
-  const audioBuffer = fs.readFileSync(audioPath);
-
-  await hanzz.sendMessage(m.key.remoteJid, {
-    video: videoBuffer,
-    caption: Text,
-    gifPlayback: true
-  }, { quoted: m });
-
-  await hanzz.sendMessage(m.key.remoteJid, {
-    audio: audioBuffer,
-    mimetype: 'audio/mpeg', 
-    ptt: false
-  }, { quoted: m });
+await hanzz.sendMessage(m.chat, { text: teks }, { quoted: m });
 }
-break;
+break
 
 case 'lockcrash': {
     if (!q) return reply(`Contoh: ${prefix}lockcrash 628xxxx`);
