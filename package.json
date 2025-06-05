@@ -1,9 +1,9 @@
 {
-  "name": "Simplebot",
-  "version": "7.0.0",
+  "name": "AteusCrasherViaWa",
+  "version": "1.0.0",
   "description": "WhatsApp Bot 2025",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "casejs",
   "scripts": {
     "start": "node index.js"
   },
