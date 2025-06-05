@@ -1,31 +1,15 @@
-/* 
-
- • Credits : Always Hanzz
- • Base : Skyzopedia
- • Contact : https://wa.me/6281936513894
- • Channel WhatsApp : https://whatsapp.com/channel/0029VbAn30eEAKW7LciEAl3C
- 
-*/
-
 const fs = require("fs");
 const chalk = require("chalk")
 
-//======Setting Pairing Code====//
+
 global.pairingCode = "628386087723"
 
-//==== Waktu Jeda Jpm & Pushkon ====//
-global.delaypushkontak = 9000
-global.delayjpm = 8000
+//~~~~~Setting Global~~~~~//
 
-//======Setting Owner======//
-global.owner = "6281936513894"
-global.namaOwner = "HanzzForrAbell"
-
-//=====Setting Payment====//
-global.dana = "083822176542"
-global.ovo = "083144115086"
-global.gopay = "Tidak Ada Payment Gopay"
-global.qris = "https://i.ibb.co.com/5WV1PWZW/Qris.jpg"
+global.owner = ["6281936513894"] // Nomor Pemilik
+global.bot = "628386087723" // Nomor Bot
+global.namabot = "AteusCrasher Via Wa V1" // Nama Bot
+global.namaown = "Always Hanzz" // Nama owner
 
 let file = require.resolve(__filename);
 fs.watchFile(file, () => {
